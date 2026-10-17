@@ -133,5 +133,5 @@ Backend/aml_audit.db
 *.p8
 *.pfx
 
-# hero (unused)
-hero/
+# hero source files (raw input)
+/hero/
