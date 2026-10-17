@@ -15,6 +15,7 @@ uvicorn[standard]>=0.23.0
 pydantic>=2.0.0
 pydantic-settings>=2.0.0
 python-multipart>=0.0.6
+websockets>=11.0
 
 # Authentication & Security
 python-jose[cryptography]>=3.3.0
@@ -23,6 +24,7 @@ httpx>=0.24.0
 
 # Database
 sqlalchemy>=2.0.0
+aiosqlite>=0.19.0
 
 # File Processing
 openpyxl>=3.1.0
@@ -30,5 +32,11 @@ xlsxwriter>=3.1.0
 reportlab>=4.0.0
 aiofiles>=23.0.0
 
+# Vyapaar Kavach — Edge AI / ZK / Cryptography
+# onnxruntime>=1.16.0         # Uncomment when deploying ONNX SLM model
+# py_ecc>=7.0.0               # Uncomment for real Groth16 BN128 pairing checks
+# snarkjs via Node (ZK circuit compiled separately, see docs/ZK_SETUP.md)
+
 # Utilities
 python-dotenv>=1.0.0
+requests>=2.31.0

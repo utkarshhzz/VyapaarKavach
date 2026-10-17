@@ -13,21 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy requirements first for layer caching
 COPY Backend/requirements.txt .
 
-# Install Python dependencies (no GPU torch for Cloud deployment)
-RUN pip install --no-cache-dir \
-    fastapi==0.109.0 \
-    uvicorn[standard]==0.27.0 \
-    httpx==0.26.0 \
-    python-multipart==0.0.7 \
-    python-jose[cryptography]==3.3.0 \
-    passlib[bcrypt]==1.7.4 \
-    pandas==2.1.4 \
-    numpy==1.26.3 \
-    scikit-learn==1.3.2 \
-    xgboost==2.0.3 \
-    networkx==3.2.1 \
-    aiofiles==23.2.1 \
-    python-dotenv==1.0.0
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend source
 COPY Backend/ ./Backend/

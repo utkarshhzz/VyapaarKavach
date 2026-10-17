@@ -26,6 +26,16 @@ import FederatedDemo from "./pages/FederatedDemo";
 import ComplianceDashboard from "./pages/ComplianceDashboard";
 import Documentation from "./pages/Documentation";
 
+// ── Vyapaar Kavach Pages ──────────────────────────────────────────────────────
+import VyapaarLanding from "./pages/VyapaarLanding";
+import MerchantDashboard from "./pages/MerchantDashboard";
+import DisputeResolution from "./pages/DisputeResolution";
+import ClaimParser from "./pages/ClaimParser";
+import OutboxMonitor from "./pages/OutboxMonitor";
+import ZKFraudSync from "./pages/ZKFraudSync";
+import AuditExport from "./pages/AuditExport";
+import GATv2Inspector from "./pages/GATv2Inspector";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -37,6 +47,20 @@ const App = () => (
         <ToastContainer />
         <BrowserRouter>
         <Routes>
+          {/* ── Vyapaar Kavach Routes (Primary) ─────────────────────────────── */}
+          <Route path="/" element={<VyapaarLanding />} />
+          <Route path="/vyapaar" element={<VyapaarLanding />} />
+          <Route path="/vyapaar/dashboard" element={<MerchantDashboard />} />
+          <Route path="/vyapaar/disputes" element={<DisputeResolution />} />
+          <Route path="/vyapaar/claim-parser" element={<ClaimParser />} />
+          <Route path="/vyapaar/outbox" element={<OutboxMonitor />} />
+          <Route path="/vyapaar/zk-fraud" element={<ZKFraudSync />} />
+          <Route path="/vyapaar/audit" element={<AuditExport />} />
+          <Route path="/vyapaar/graph-ml" element={<GATv2Inspector />} />
+          {/* Governance reuses SmurfPakad page */}
+          <Route path="/vyapaar/governance" element={<ProtectedRoute><Governance /></ProtectedRoute>} />
+
+          {/* ── SmurfPakad / CryptoFlow Routes (Secondary) ──────────────────── */}
           <Route path="/cryptoflow" element={<Index />} />
           <Route path="/cryptoflow/auth/callback" element={<AuthCallback />} />
           <Route path="/cryptoflow/dashboard" element={
@@ -129,4 +153,3 @@ const App = () => (
 );
 
 export default App;
-

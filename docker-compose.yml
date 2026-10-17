@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vyapaar_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=development
+      - PORT=8000
+      - LOG_LEVEL=INFO
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173
+      - JWT_SECRET=vyapaar_kavach_dev_jwt_secret_key_change_in_production_32chars
+      - DB_TYPE=sqlite
+      - SQLITE_DB_PATH=/app/Backend/vyapaar_kavach.db
+      - ONNX_EDGE_ENABLED=true
+      - ZK_PROOFS_ENABLED=true
+      - EBPF_TELEMETRY_ENABLED=true
+    volumes:
+      - ./Backend:/app/Backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

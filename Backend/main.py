@@ -45,8 +45,14 @@ from app.routers import (
     governance_router,
     federated_router,
     watson_nlp_router,
+    vyapaar_disputes_router,
+    vyapaar_outbox_router,
+    vyapaar_claims_router,
+    vyapaar_zk_router,
+    vyapaar_audit_router,
 )
 from app.services.ml_service import ml_service
+from app.db.vyapaar_models import init_db
 
 # Configure logging
 logging.basicConfig(
@@ -63,8 +69,15 @@ async def lifespan(app: FastAPI):
     Handles startup and shutdown events
     """
     # Startup
-    logger.info("Starting SMURF HUNTER Backend...")
+    logger.info("Starting SMURF HUNTER + Vyapaar Kavach Backend...")
     
+    # Initialize Vyapaar Kavach database
+    try:
+        init_db()
+        logger.info("Vyapaar Kavach database initialized")
+    except Exception as e:
+        logger.error(f"Failed to initialize Vyapaar DB: {e}")
+
     # Load ML model
     try:
         ml_service.load_model()
@@ -75,7 +88,7 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    logger.info("Shutting down SMURF HUNTER Backend...")
+    logger.info("Shutting down Backend...")
     from app.services.ibm_watsonx_service import ibm_watsonx_service
     await ibm_watsonx_service.close()
 
@@ -194,6 +207,13 @@ app.include_router(federated_router, prefix=API_V1_PREFIX)
 
 # IBM Watson NLP (transaction narration analysis)
 app.include_router(watson_nlp_router, prefix=API_V1_PREFIX)
+
+# ── Vyapaar Kavach Routes ─────────────────────────────────────────────────────
+app.include_router(vyapaar_disputes_router, prefix=API_V1_PREFIX)
+app.include_router(vyapaar_outbox_router, prefix=API_V1_PREFIX)
+app.include_router(vyapaar_claims_router, prefix=API_V1_PREFIX)
+app.include_router(vyapaar_zk_router, prefix=API_V1_PREFIX)
+app.include_router(vyapaar_audit_router, prefix=API_V1_PREFIX)
 
 
 # ==================== Health Check ====================

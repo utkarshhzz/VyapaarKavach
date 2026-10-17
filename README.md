@@ -1,73 +1,207 @@
-# SmurfPakad
+# Vyapaar Kavach — व्यापार कवच
+## Resilient & Privacy-Preserving Exception Resolution for India's Decentralized Commerce
 
-Fraud detection of smurfing chaining patterns via Graph Neural Networks on Bitcoin datasets.
+> **Team SmurfPakad | India Hackathon 2026**
 
-## Overview
+[![License: MIT](https://img.shields.io/badge/License-MIT-violet.svg)](LICENSE)
+[![ONDC Ready](https://img.shields.io/badge/ONDC-Ready-orange.svg)](https://ondc.org)
+[![ZK-SNARKs](https://img.shields.io/badge/ZK-Groth16-purple.svg)](https://github.com/iden3/snarkjs)
+[![DPDP 2023](https://img.shields.io/badge/DPDP_2023-Compliant-green.svg)](https://meity.gov.in)
 
-SmurfPakad detects money laundering patterns (smurfing/structuring) in Bitcoin transactions using Graph Attention Networks v2 (GATv2). The project analyzes transaction graphs to identify chaining patterns characteristic of smurfing operations.
+---
 
-## Features
+## Problem Statement
 
-- **GATv2 Implementation**: Graph Attention Network v2 for transaction pattern classification
-- **IBM Dataset**: Trained and evaluated on IBM's Bitcoin transaction dataset
-- **FastAPI Benchmarks**: REST API for model inference with performance benchmarks
-- **Web Interface**: Interactive website for visualization and detection
+Small merchants in India face critical operational failures when processing refunds and disputes in decentralized payment ecosystems (ONDC):
 
-## Project Structure
+1. **Double-Payouts** — Network partitions cause duplicate refund executions
+2. **PII Leakage** — Customer claims processed in cloud violate DPDP Act 2023
+3. **Opaque Fraud Networks** — No privacy-preserving way to share fraud intelligence
+4. **Unstructured Claims** — WhatsApp/SMS disputes have no structured resolution path
 
-```
-SmurfPakad_v1/
-├── data/                 # Bitcoin transaction datasets
-├── models/               # GATv2 model implementations
-├── api/                  # FastAPI service for inference
-├── web/                  # Frontend website
-├── notebooks/            # Training and evaluation notebooks
-└── benchmarks/           # Performance benchmarking scripts
-```
+---
+
+## Solution: Vyapaar Kavach
+
+A **5-layer architecture** that solves each challenge deterministically:
+
+| Layer | Technology | Solves |
+|---|---|---|
+| **Edge NLP** | ONNX Quantized SLM (WebAssembly) | PII-safe claim parsing |
+| **State Machine** | EXCEPTIONS_V1 + PostgreSQL triggers | Deterministic dispute resolution |
+| **Transactional Outbox** | Atomic lease + idempotency keys | Double-payout prevention |
+| **ZK Fraud Syndication** | Groth16 ZK-SNARKs | Privacy-preserving intelligence sharing |
+| **Graph ML** | GATv2 (PyTorch Geometric) | Fraud ring detection |
+
+---
 
 ## Quick Start
 
-### Installation
+### Frontend (Vyapaar Kavach UI)
 
 ```bash
+cd SmurfPakad_v1
+npm install
+npm run dev
+```
+
+Navigate to `http://localhost:8080` → You'll see the **Vyapaar Kavach** landing page.
+
+### Backend (FastAPI)
+
+```bash
+cd SmurfPakad_v1/Backend
 pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### Run API Server
+The backend auto-initializes the SQLite database with realistic demo data on first run.
 
-```bash
-uvicorn api.main:app --host 0.0.0.0 --port 8000
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      MERCHANT'S DEVICE                          │
+│  ┌──────────────────┐  ┌──────────────────────────────────────┐ │
+│  │  ONNX SLM Engine │  │      React/Vite PWA Frontend         │ │
+│  │  (WebAssembly)   │  │   • Offline-first via Service Worker │ │
+│  │  Hinglish NLP    │  │   • ZK proof visualization           │ │
+│  │  Zero PII upload │  │   • Real-time outbox monitor         │ │
+│  └──────────────────┘  └──────────────────────────────────────┘ │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ Structured intents only (no PII)
+┌────────────────────────────▼────────────────────────────────────┐
+│                    FastAPI GATEWAY (Zones 1+2)                   │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │           EXCEPTIONS_V1 Policy Engine                      │ │
+│  │  payment_status × verification_state → deterministic verdict│ │
+│  └────────────────────────────────────────────────────────────┘ │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ ACID transactions
+┌────────────────────────────▼────────────────────────────────────┐
+│              POSTGRESQL DATABASE (Ledger + Governance)           │
+│  • refund_intents (state machine)  • outbox_jobs (atomic lease) │
+│  • governance_audit_logs (PL/pgSQL triggers, append-only)       │
+│  • zk_fraud_proofs (cryptographic proof store)                  │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+        ┌────────────────────┼────────────────────┐
+        │                    │                    │
+┌───────▼──────┐    ┌────────▼───────┐   ┌───────▼────────┐
+│   eBPF       │    │    GATv2 ML    │   │  ZK-SNARK      │
+│  Outbox      │    │  Fraud Ring    │   │  Groth16       │
+│  Workers     │    │  Detection     │   │  Syndication   │
+│  Monitoring  │    │  (Advisory)    │   │  (ONDC Net)    │
+└──────────────┘    └────────────────┘   └────────────────┘
 ```
 
-### Run Website
+---
 
-```bash
-cd web && npm install && npm run dev
-```
+## Key Pages (Vyapaar Kavach)
 
-## Model
+| Route | Page | Description |
+|---|---|---|
+| `/` | **Landing** | Merchant-first landing with architecture overview |
+| `/vyapaar/dashboard` | **Dashboard** | Live stats, payment ledger, refund intents |
+| `/vyapaar/disputes` | **Dispute Resolution** | State machine + policy matrix + conflict management |
+| `/vyapaar/claim-parser` | **Edge NLP** | ONNX SLM claim parsing with Hinglish support |
+| `/vyapaar/outbox` | **Outbox Monitor** | Worker status, eBPF events, lease visualization |
+| `/vyapaar/zk-fraud` | **ZK Fraud Sync** | Proof generation, verification, ONDC syndication |
+| `/vyapaar/audit` | **Audit Export** | SHA-256 signed cryptographic audit packets |
+| `/cryptoflow` | **SmurfPakad** | GATv2 Bitcoin fraud detection (original system) |
 
-- **Architecture**: GATv2 (Graph Attention Network v2)
-- **Task**: Binary classification (smurfing vs legitimate)
-- **Dataset**: IBM Bitcoin transaction dataset
-- **Metrics**: AUC-ROC, Precision, Recall, F1-Score
+---
 
-## API Endpoints
+## Backend API Endpoints
+
+### Vyapaar Kavach APIs
 
 | Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/predict` | POST | Detect smurfing patterns in transaction graph |
-| `/health` | GET | Health check |
-| `/metrics` | GET | Model performance metrics |
+|---|---|---|
+| `GET /api/v1/vyapaar/disputes/dashboard` | GET | Merchant dashboard stats |
+| `GET /api/v1/vyapaar/disputes/payments` | GET | Payment ledger (tenant-scoped) |
+| `POST /api/v1/vyapaar/disputes/refunds/create` | POST | Create idempotent refund intent |
+| `PATCH /api/v1/vyapaar/disputes/refunds/{id}/status` | PATCH | State machine transition |
+| `POST /api/v1/vyapaar/disputes/payments/{id}/webhook-reconcile` | POST | Resolve SUBMISSION_UNKNOWN |
+| `POST /api/v1/vyapaar/claims/parse` | POST | Edge NLP claim parsing |
+| `POST /api/v1/vyapaar/outbox/simulate-worker-run` | POST | Run outbox worker cycle |
+| `GET /api/v1/vyapaar/outbox/ebpf-status` | GET | eBPF monitoring status |
+| `POST /api/v1/vyapaar/zk/generate` | POST | Generate ZK fraud proof |
+| `POST /api/v1/vyapaar/zk/verify` | POST | Verify ZK proof |
+| `GET /api/v1/vyapaar/audit/export/json` | GET | SHA-256 signed audit packet |
 
-## Benchmarks
+---
 
-Run performance benchmarks:
+## Critical Innovation Points
 
-```bash
-python benchmarks/run_benchmarks.py
+### 1. Double-Spend Prevention (Outbox Pattern)
+
+```sql
+-- Atomic lease acquisition — only ONE worker can claim
+UPDATE outbox_jobs
+SET status='LEASED', lease_id=?, lease_expires_at=?
+WHERE id=? AND status='PENDING';  -- Conditional update = atomic lock
 ```
 
-## License
+### 2. SUBMISSION_UNKNOWN Lock
 
-MIT License
+When a webhook times out, the system immediately locks the refund intent:
+```
+payment_status=PENDING + verification_state=SUBMISSION_UNKNOWN
+→ EXCEPTIONS_V1_TIMEOUT_LOCK
+→ Intent status: SUBMISSION_UNKNOWN (cannot be modified)
+→ Outbox job: NOT created (prevents duplicate provider calls)
+```
+
+### 3. ZK Proof Generation (Groth16)
+
+```
+Private inputs (HIDDEN): merchant_id, transaction_ids, amounts, timestamps
+                  ↓
+Circom Circuit: anomaly_score = f(dispute_velocity, cluster_size, amounts)
+                  ↓
+Groth16 Prover: π = (π_A, π_B, π_C) — 192 bytes on BN128 curve
+                  ↓
+Public outputs (SHARED): anomaly_score, cluster_size, exceeds_threshold
+```
+
+### 4. Edge NLP (ONNX SLM)
+
+```
+Customer WhatsApp: "Maine 325 rupaye bheje par kuch nahi mila TXN2024002"
+        ↓ (processed on device, never uploaded)
+Intent: REFUND | Amount: ₹325 | Ref: TXN2024002 | Urgency: HIGH
+        ↓ (only structured intent sent to API)
+EXCEPTIONS_V1 evaluation → Create refund intent
+```
+
+---
+
+## Data Model
+
+```sql
+tenants           -- Merchant registry (multi-tenant)
+payments          -- Dual-track: payment_status ⊥ verification_state
+provider_events   -- Webhook event log
+refund_intents    -- State machine core (ACID)
+outbox_jobs       -- Atomic lease workers
+governance_audit_logs  -- Append-only, PL/pgSQL trigger-populated
+zk_fraud_proofs   -- Cryptographic proof store
+claims            -- Parsed intents (PII never stored)
+```
+
+---
+
+## Team SmurfPakad
+
+Built for the **India International Hackathon 2026** — demonstrating that deterministic financial systems, edge AI, and zero-knowledge cryptography can protect India's 18,000+ small merchants in the ONDC ecosystem.
+
+**Technology Stack:**
+- Frontend: React 18 + TypeScript + Vite + Tailwind CSS
+- Backend: Python + FastAPI + SQLite (PostgreSQL-ready)
+- ML: PyTorch Geometric GATv2
+- Cryptography: Groth16 ZK-SNARKs (Circom simulation)
+- Edge AI: ONNX Runtime simulation (WebAssembly-ready)
+- Security: eBPF network monitoring simulation

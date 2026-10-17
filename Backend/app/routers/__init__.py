@@ -1,5 +1,5 @@
 """
-API Routers
+API Routers — SmurfPakad + Vyapaar Kavach
 """
 from app.routers.auth import router as auth_router
 from app.routers.dashboard import router as dashboard_router
@@ -17,6 +17,13 @@ from app.routers.federated import router as federated_router
 from app.routers.watson_nlp import router as watson_nlp_router
 from app.routers.attack import router as attack_router
 
+# ── Vyapaar Kavach Routers ────────────────────────────────────────────────────
+from app.routers.vyapaar_disputes import router as vyapaar_disputes_router
+from app.routers.vyapaar_outbox import router as vyapaar_outbox_router
+from app.routers.vyapaar_claims import router as vyapaar_claims_router
+from app.routers.vyapaar_zk import router as vyapaar_zk_router
+from app.routers.vyapaar_audit import router as vyapaar_audit_router
+
 __all__ = [
     "auth_router",
     "dashboard_router",
@@ -33,4 +40,10 @@ __all__ = [
     "federated_router",
     "watson_nlp_router",
     "attack_router",
+    # Vyapaar Kavach
+    "vyapaar_disputes_router",
+    "vyapaar_outbox_router",
+    "vyapaar_claims_router",
+    "vyapaar_zk_router",
+    "vyapaar_audit_router",
 ]
